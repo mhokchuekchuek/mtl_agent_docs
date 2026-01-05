@@ -1,0 +1,16 @@
+flowchart LR
+    subgraph LiteLLM["LiteLLM"]
+        RC[LLM Response Cache]
+    end
+
+    subgraph SelfHosted["Self-Hosted LLM #40;vLLM#41;"]
+        LMC["LMCache<br/>#40;KV Cache#41;"]
+    end
+
+    LiteLLM --> SelfHosted
+
+    classDef proxy fill:#fef3c7,stroke:#f59e0b,stroke-width:2px,color:#b45309
+    classDef selfhost fill:#cffafe,stroke:#06b6d4,stroke-width:2px,color:#0e7490
+
+    class RC proxy
+    class LMC selfhost

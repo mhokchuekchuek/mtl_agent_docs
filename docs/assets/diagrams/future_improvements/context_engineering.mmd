@@ -1,0 +1,69 @@
+flowchart TB
+    subgraph Input["Context Input"]
+        Q[User Query]
+        H[Message History]
+        T[Tool Results]
+    end
+
+    subgraph Strategies["4 Context Engineering Strategies"]
+        subgraph Write["1. WRITE"]
+            W1[Scratchpad]
+            W2[Long-term Memory]
+        end
+
+        subgraph Select["2. SELECT"]
+            S1[Semantic Search]
+            S2[Tool RAG]
+            S3[Relevant History]
+        end
+
+        subgraph Compress["3. COMPRESS"]
+            C1[Summarization]
+            C2[Output Truncation]
+            C3[Token Pruning]
+        end
+
+        subgraph Isolate["4. ISOLATE"]
+            I1[Subagent Context]
+            I2[State Schema]
+            I3[Parallel Execution]
+        end
+    end
+
+    subgraph LLM["LLM Context Window"]
+        CW[Optimized Context]
+    end
+
+    subgraph Output["Agent Output"]
+        R[Response]
+    end
+
+    Q --> Select
+    H --> Select
+    H --> Compress
+    T --> Write
+    T --> Compress
+
+    Select --> CW
+    Compress --> CW
+    Write -.->|retrieve| CW
+    Isolate --> CW
+
+    CW --> R
+    R -.->|save| Write
+
+    classDef input fill:#dbeafe,stroke:#3b82f6,stroke-width:2px,color:#1e40af
+    classDef write fill:#d1fae5,stroke:#10b981,stroke-width:2px,color:#065f46
+    classDef select fill:#cffafe,stroke:#06b6d4,stroke-width:2px,color:#0e7490
+    classDef compress fill:#fef3c7,stroke:#f59e0b,stroke-width:2px,color:#b45309
+    classDef isolate fill:#fce7f3,stroke:#ec4899,stroke-width:2px,color:#be185d
+    classDef llm fill:#ede9fe,stroke:#8b5cf6,stroke-width:2px,color:#5b21b6
+    classDef output fill:#fed7aa,stroke:#f97316,stroke-width:2px,color:#c2410c
+
+    class Q,H,T input
+    class W1,W2 write
+    class S1,S2,S3 select
+    class C1,C2,C3 compress
+    class I1,I2,I3 isolate
+    class CW llm
+    class R output

@@ -1,0 +1,19 @@
+flowchart TD
+    A[1. check_product] --> B[2. check_stock]
+    B --> C{Stock available?}
+    C -->|No| ERR[Return error]
+    C -->|Yes| D[3. insert_order]
+    D --> E[4. get_order_id]
+    E --> F[5. insert_details]
+    F --> G[6. update_inventory]
+    G --> OK[Order complete]
+
+    classDef step fill:#cffafe,stroke:#06b6d4,stroke-width:2px,color:#0e7490
+    classDef decision fill:#fef3c7,stroke:#f59e0b,stroke-width:2px,color:#b45309
+    classDef error fill:#fee2e2,stroke:#ef4444,stroke-width:2px,color:#b91c1c
+    classDef success fill:#d1fae5,stroke:#10b981,stroke-width:2px,color:#065f46
+
+    class A,B,D,E,F,G step
+    class C decision
+    class ERR error
+    class OK success

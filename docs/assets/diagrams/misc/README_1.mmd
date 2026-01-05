@@ -1,0 +1,79 @@
+flowchart LR
+    subgraph Obs["Observability + Prompts"]
+        Langfuse["Langfuse<br/>(Prompt Manager<br/>+ Tracing)"]
+    end
+
+    subgraph Memory["Memory Layer"]
+        Redis["Redis<br/>Short-term Memory<br/>(Checkpointer)"]
+        Postgres["PostgreSQL<br/>Long-term Memory<br/>(Store)"]
+    end
+
+    subgraph UI["UI Layer"]
+        CustomerUI["Customer UI<br/>(8501)"]
+        ClientUI["Client UI<br/>(8502)"]
+    end
+
+    subgraph API["API"]
+        FastAPI["FastAPI<br/>(8000)"]
+    end
+
+    subgraph Workflows["Workflows"]
+        CustomerWF["Customer<br/>Workflow"]
+        ClientWF["Client<br/>Workflow"]
+    end
+
+    subgraph Agents["Agents"]
+        Translation["Translation"]
+        Product["Product"]
+        Orchestrator["Orchestrator"]
+        Insight["Insight"]
+        ChatHistoryAgent["ChatHistory"]
+    end
+
+    subgraph Tools["Tools"]
+        VectorTools["VectorDB<br/>(Search, Similar)"]
+        CustomerSQL["Customer SQL<br/>(Product, Order,<br/>Place, Cancel)"]
+        ClientSQL["Client SQL<br/>(Analytics)"]
+        ChatHistorySQL["ChatHistorySQL"]
+        Viz["Visualization"]
+    end
+
+    subgraph LLM["LLM"]
+        LiteLLM["LiteLLM<br/>(4000)"]
+        OpenAI["OpenAI"]
+    end
+
+    subgraph Data["Data Layer"]
+        Qdrant["Qdrant<br/>Vector DB"]
+        SQLite["SQLite<br/>ERP Data"]
+    end
+
+    Memory <--> Workflows
+    UI --> API --> Workflows --> Agents --> Tools
+    Agents --> LiteLLM --> OpenAI
+    VectorTools --> Qdrant
+    CustomerSQL --> SQLite
+    ClientSQL --> SQLite
+    ChatHistorySQL --> Postgres
+    Langfuse -.->|prompts| Agents
+    Agents -.->|traces| Langfuse
+
+    classDef obs fill:#fef3c7,stroke:#f59e0b,stroke-width:2px,color:#b45309
+    classDef memory fill:#fce7f3,stroke:#ec4899,stroke-width:2px,color:#be185d
+    classDef ui fill:#dbeafe,stroke:#3b82f6,stroke-width:2px,color:#1e40af
+    classDef api fill:#ede9fe,stroke:#8b5cf6,stroke-width:2px,color:#5b21b6
+    classDef workflow fill:#cffafe,stroke:#06b6d4,stroke-width:2px,color:#0e7490
+    classDef agent fill:#d1fae5,stroke:#10b981,stroke-width:2px,color:#065f46
+    classDef tool fill:#fed7aa,stroke:#f97316,stroke-width:2px,color:#c2410c
+    classDef llm fill:#e0e7ff,stroke:#6366f1,stroke-width:2px,color:#4338ca
+    classDef data fill:#f3e8ff,stroke:#a855f7,stroke-width:2px,color:#7e22ce
+
+    class Langfuse obs
+    class Redis,Postgres memory
+    class CustomerUI,ClientUI ui
+    class FastAPI api
+    class CustomerWF,ClientWF workflow
+    class Translation,Product,Orchestrator,Insight,ChatHistoryAgent agent
+    class VectorTools,CustomerSQL,ClientSQL,ChatHistorySQL,Viz tool
+    class LiteLLM,OpenAI llm
+    class Qdrant,SQLite data
